@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 // CORS Setup
 const corsOptions = {
-    origin: "https://jobportal-gg.onrender.com/",
+    origin: ["http://localhost:5173", "https://jobportal-gg.onrender.com"],
     credentials: true
 };
 app.use(cors(corsOptions));
