@@ -19,43 +19,35 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// CORS Setup
+// ✅ CORS Setup
 const corsOptions = {
-    origin: ["http://localhost:5173", "https://jobportal-gg.onrender.com", "https://job-portal-frontend-six-opal.vercel.app"],
-    credentials: true,
+    origin: [
+        "http://localhost:5173",
+        "https://jobportal-gg.onrender.com", // Your frontend on Render
+        "https://job-portal-frontend-six-opal.vercel.app" // If you still deploy on Vercel later
+    ],
+    credentials: true, // Allow cookies to be sent
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['set-cookie']
 };
 app.use(cors(corsOptions));
 
-// Update cookie settings
-app.use(cookieParser());
-app.use((req, res, next) => {
-    res.cookie('token', req.cookies.token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-        domain: '.onrender.com'
-    });
-    next();
-});
-
-// API Routes
+// ✅ API Routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/company", companyRoute);
 app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/application", applicationRoute);
 
-// Serve Frontend Build Files
+// ✅ Serve Frontend Build Files (optional for full-stack deployment on same server)
 app.use(express.static(path.join(_dirname, "frontend", "dist")));
 
-// Wildcard Route (keep this LAST)
+// ✅ Wildcard Route (for SPA frontend routing, uncomment if needed)
 // app.get("*", (req, res) => {
 //     res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
 // });
 
-// Start Server
+// ✅ Start Server
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
