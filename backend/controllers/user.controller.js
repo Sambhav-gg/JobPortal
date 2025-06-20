@@ -83,7 +83,7 @@ export const login = async (req, res) => {
 
         email = email.toLowerCase();
 
-        let user = await User.findOne({ email });
+        let user = await User.findOne({ email }).maxTimeMS(20000); // Increase query timeout
         if (!user) {
             return res.status(400).json({
                 message: "Incorrect email or password",
@@ -140,7 +140,9 @@ export const login = async (req, res) => {
         console.error("Login error:", error);
         return res.status(500).json({
             success: false,
-            message: "Internal Server Error"
+            message: error.name === 'MongooseError' ? 
+                     "Database connection error. Please try again." : 
+                     "Internal Server Error"
         });
     }
 };
