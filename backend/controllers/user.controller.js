@@ -83,7 +83,7 @@ export const login = async (req, res) => {
 
         email = email.toLowerCase();
 
-        let user = await User.findOne({ email }).maxTimeMS(20000); // Increase query timeout
+        let user = await User.findOne({ email }).maxTimeMS(20000);
         if (!user) {
             return res.status(400).json({
                 message: "Incorrect email or password",
@@ -106,13 +106,8 @@ export const login = async (req, res) => {
             });
         }
 
-        const tokenData = {
-            userId: user._id
-        };
-
-        const token = jwt.sign(tokenData, process.env.SECRET_KEY, {
-            expiresIn: "1d"
-        });
+        const tokenData = { userId: user._id };
+        const token = jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: "1d" });
 
         const userResponse = {
             _id: user._id,
@@ -123,15 +118,14 @@ export const login = async (req, res) => {
             profile: user.profile
         };
 
-        // In your login controller
+        // ✅ Proper Cookie Setup: domain removed
         return res
             .status(200)
             .cookie("token", token, {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none',
-                maxAge: 24 * 60 * 60 * 1000, // 1 day
-                domain: '.onrender.com'
+                maxAge: 24 * 60 * 60 * 1000 // 1 day
             })
             .json({
                 message: `Welcome back ${user.fullname}`,
@@ -143,13 +137,12 @@ export const login = async (req, res) => {
         console.error("Login error:", error);
         return res.status(500).json({
             success: false,
-            message: error.name === 'MongooseError' ? 
-                     "Database connection error. Please try again." : 
-                     "Internal Server Error"
+            message: error.name === 'MongooseError' ?
+                "Database connection error. Please try again." :
+                "Internal Server Error"
         });
     }
 };
-
     
 
 
