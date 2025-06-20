@@ -21,11 +21,7 @@ app.use(cookieParser());
 
 // ✅ CORS Setup
 const corsOptions = {
-    origin: [
-        "http://localhost:5173",
-        "https://jobportal-gg.onrender.com", // Your frontend on Render
-        "https://job-portal-frontend-six-opal.vercel.app" // If you still deploy on Vercel later
-    ],
+    origin: ["https://jobportal-gg.onrender.com"],
     credentials: true, // Allow cookies to be sent
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
