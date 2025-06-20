@@ -123,17 +123,20 @@ export const login = async (req, res) => {
             profile: user.profile
         };
 
+        // In your login controller
         return res
             .status(200)
             .cookie("token", token, {
-                maxAge: 1 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                sameSite: "strict"
+                secure: true,
+                sameSite: 'none',
+                maxAge: 24 * 60 * 60 * 1000, // 1 day
+                domain: '.onrender.com'
             })
             .json({
                 message: `Welcome back ${user.fullname}`,
                 success: true,
-                user: userResponse // Send filtered user response
+                user: userResponse
             });
 
     } catch (error) {

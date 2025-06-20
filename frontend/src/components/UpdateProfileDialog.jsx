@@ -60,6 +60,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
             "Content-Type": "multipart/form-data",
           },
           withCredentials: true,
+          credentials: 'include'
         }
       );
       if (res.data.success) {

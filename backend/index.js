@@ -22,9 +22,24 @@ app.use(cookieParser());
 // CORS Setup
 const corsOptions = {
     origin: ["http://localhost:5173", "https://jobportal-gg.onrender.com"],
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['set-cookie']
 };
 app.use(cors(corsOptions));
+
+// Update cookie settings
+app.use(cookieParser());
+app.use((req, res, next) => {
+    res.cookie('token', req.cookies.token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        domain: '.onrender.com'
+    });
+    next();
+});
 
 // API Routes
 app.use("/api/v1/user", userRoute);

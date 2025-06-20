@@ -1,31 +1,32 @@
 import jwt from "jsonwebtoken";
 
- const isAuthenticated =async(req,res,next)=>{
-    try{
-        const token =req.cookies.token;
-        if(!token){
-            return res.status(400).json({
-                message:"User is not authenticated ",
-                success:false
-            })
+const isAuthenticated = async(req, res, next) => {
+    try {
+        const token = req.cookies.token;
+        if(!token) {
+            return res.status(401).json({
+                message: "Please login first",
+                success: false
+            });
         }
-        //ab hum token ko decode krenge 
-        const decode =jwt.verify(token,process.env.SECRET_KEY);
-        if(!decode){
-            return res.status(400).json({
-                message:"Invalid token data",
-                status:false
-            })
-        };
 
-        
+        const decode = jwt.verify(token, process.env.SECRET_KEY);
+        if(!decode) {
+            return res.status(401).json({
+                message: "Invalid token",
+                success: false
+            });
+        }
+
         req.user = { _id: decode.userId };
         next();
-         
     }
-    catch(error){
-        console.log(error);
-
+    catch(error) {
+        console.error("Authentication error:", error);
+        return res.status(401).json({
+            message: "Authentication failed",
+            success: false
+        });
     }
- }
- export default isAuthenticated;
+};
+export default isAuthenticated;
